@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi: Nanda Sound_5G</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header WiFi Style */
+        .wifi-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .wifi-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .wifi-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #0072ff;
+        }
+
+        .wifi-info h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .wifi-info p {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Status Container */
+        .status-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* Connecting State */
+        .connecting-state {
+            text-align: center;
+            display: block;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #333;
+            border-top: 4px solid #00ff88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-text {
+            font-size: 18px;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+
+        .status-subtext {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            margin-top: 30px;
+            text-align: left;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            opacity: 0.3;
+            transition: 0.3s;
+        }
+
+        .step.active {
+            opacity: 1;
+        }
+
+        .step.completed {
+            opacity: 1;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-icon {
+            background: #00ff88;
+            color: #000;
+            animation: pulse 1s infinite;
+        }
+
+        .step.completed .step-icon {
+            background: #00ff88;
+            color: #000;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+        }
+
+        /* Prank Photo State */
+        .prank-state {
+            display: none;
+            text-align: center;
+            width: 100%;
+        }
+
+        .prank-photo-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Label PRANK di ATAS foto (tidak nutupin) */
+        .prank-label {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #fff;
+            font-size: 32px;
+            font-weight: 900;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: shake 0.5s infinite;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 15px;
+            display: inline-block;
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.4);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(-3deg); }
+            25% { transform: rotate(3deg); }
+            50% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+        }
+
+        /* Foto dengan rasio dinamis */
+        .prank-photo {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            max-height: 60vh;
+            object-fit: contain;
+            border-radius: 15px;
+            border: 3px solid #00ff88;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            background: #111;
+        }
+
+        .prank-subtitle {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            background: #111;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #444;
+            border-top: 1px solid #333;
+        }
+
+        /* IP Address Display */
+        .ip-display {
+            background: #222;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 16px;
+            color: #00ff88;
+            display: inline-block;
+        }
+
+        /* Responsive untuk HP kecil */
+        @media (max-width: 360px) {
+            .prank-label {
+                font-size: 24px;
+                padding: 12px 20px;
+            }
+            
+            .wifi-info h1 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- WiFi Header -->
+    <div class="wifi-header">
+        <div class="wifi-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 21L12 21C12 21 12 21 12 21C12.5523 21 13 20.5523 13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20C11 20.5523 11.4477 21 12 21ZM12 15C14.7614 15 17 12.7614 17 10C17 7.23858 14.7614 5 12 5C9.23858 5 7 7.23858 7 10C7 12.7614 9.23858 15 12 15ZM12 3C15.866 3 19 6.13401 19 10C19 13.866 15.866 17 12 17C8.13401 17 5 13.866 5 10C5 6.13401 8.13401 3 12 3ZM12 1C16.9706 1 21 5.02944 21 10C21 14.9706 16.9706 19 12 19C7.02944 19 3 14.9706 3 10C3 5.02944 7.02944 1 12 1Z"/>
+            </svg>
+        </div>
+        <div class="wifi-info">
+            <h1>WiFi: Nanda Sound_5G</h1>
+            <p>Secured Network • 5GHz</p>
+        </div>
+    </div>
+
+    <!-- Status Container -->
+    <div class="status-container">
+        
+        <!-- Connecting State -->
+        <div class="connecting-state" id="connectingState">
+            <div class="spinner"></div>
+            <p class="status-text" id="statusText">Menghubungkan...</p>
+            <p class="status-subtext" id="statusSubtext">Mohon tunggu</p>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step active" id="step1">
+                    <div class="step-icon">1</div>
+                    <span>Authenticating...</span>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-icon">2</div>
+                    <span>Mendapatkan alamat IP...</span>
+                </div>
+                <div class="step" id="step3">
+                    <div class="step-icon">3</div>
+                    <span>Verifying connection...</span>
+                </div>
+            </div>
+
+            <!-- IP Display -->
+            <div class="ip-display" id="ipDisplay" style="display: none;">
+                IP: 192.168.1.xxx
+            </div>
+        </div>
+
+        <!-- Prank Photo State -->
+        <div class="prank-state" id="prankState">
+            <div class="prank-photo-container">
+                <!-- Label di ATAS foto -->
+                <div class="prank-label">PRANK mas bro! 🙏🙈</div>
+                <!-- Foto dengan rasio dinamis -->
+                <img class="prank-photo" id="prankPhoto" src="" alt="Prank">
+            </div>
+            <p class="prank-subtitle">minal aidzin wal faizin mas bro 🙏🙏 <br> mohon maaf lahir dan batin mas bro 🙏</p>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        © 2030 Nanda Sound System • Guest Network
+    </div>
+
+    <script>
+        // --- GANTI FOTO PRANK DI SINI ---
+        // Bisa pakai link gambar apa saja (JPG, PNG, GIF)
+        const photos = [
+            "https://i.pinimg.com/736x/86/ce/bc/86cebc6997ce25add5e1c1146ca8e48f.jpg", // Contoh 1
+            "https://i.pinimg.com/736x/af/bf/63/afbf6396154913302c45cf5be749bc83.jpg", // Contoh 2
+            "https://i.pinimg.com/736x/c2/2d/c3/c22dc387dc86763dcdb519aaf881ed09.jpg", // Contoh 3
+            "https://i.pinimg.com/736x/b9/63/a0/b963a07367c037de9e8a75a93a7f3dc4.jpg", // Contoh 4
+            "https://i.pinimg.com/736x/8a/14/28/8a14283ba3d94d49bd1b98a1b9cb356e.jpg",  // Contoh 5
+            "https://i.pinimg.com/736x/18/c5/e7/18c5e7d9b4e1a5b8a0c7ee6c8b1d2810.jpg",  // Contoh 6
+            "https://i.pinimg.com/1200x/4e/bf/4b/4ebf4be5f630996e4a58d5202ab8aefe.jpg", // Contoh 7
+            "https://i.pinimg.com/736x/94/10/ae/9410ae955874d04ac9493a055db3b8db.jpg", // Contoh 8
+            "https://i.pinimg.com/736x/f0/60/79/f06079f6f06bc041110d0a4e657d17f7.jpg"
+        ];
+
+        let photoIndex = 0;
+        const statusText = document.getElementById('statusText');
+        const statusSubtext = document.getElementById('statusSubtext');
+        const ipDisplay = document.getElementById('ipDisplay');
+
+        // Step Progress Function
+        function updateStep(stepNum) {
+            for (let i = 1; i <= 3; i++) {
+                const step = document.getElementById(`step${i}`);
+                if (i < stepNum) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                    step.querySelector('.step-icon').innerHTML = '✓';
+                } else if (i === stepNum) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        // Generate Random IP
+        function generateIP() {
+            return `192.168.1.${Math.floor(Math.random() * 254) + 1}`;
+        }
+
+        // Connection Simulation
+        setTimeout(() => {
+            // Step 1: Authenticating (0-2 seconds)
+            updateStep(1);
+            statusText.innerText = 'Menghubungkan...';
+            statusSubtext.innerText = 'Authenticating device...';
+
+            setTimeout(() => {
+                // Step 2: Getting IP (2-4 seconds)
+                updateStep(2);
+                statusText.innerText = 'Menghubungkan...';
+                statusSubtext.innerText = 'Mendapatkan alamat IP...';
+                
+                setTimeout(() => {
+                    // Show IP
+                    ipDisplay.style.display = 'inline-block';
+                    ipDisplay.innerText = `IP: ${generateIP()}`;
+
+                    setTimeout(() => {
+                        // Step 3: Verifying (4-6 seconds)
+                        updateStep(3);
+                        statusText.innerText = 'Menghubungkan...';
+                        statusSubtext.innerText = 'Verifying connection...';
+
+                        setTimeout(() => {
+                            // Show Prank!
+                            showPrank();
+                        }, 2000);
+                    }, 2000);
+                }, 1500);
+            }, 2000);
+        }, 1000);
+
+        // Show Prank Photos
+        function showPrank() {
+            document.getElementById('connectingState').style.display = 'none';
+            document.getElementById('prankState').style.display = 'block';
+            
+            const imgElement = document.getElementById('prankPhoto');
+            
+            function showNextPhoto() {
+                imgElement.src = photos[photoIndex];
+                photoIndex = (photoIndex + 1) % photos.length;
+            }
+            
+            showNextPhoto();
+            setInterval(showNextPhoto, 3000); // Ganti foto setiap 3 detik
+        }
+    </script>
+</body>
+</html>
