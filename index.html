@@ -159,54 +159,66 @@
             width: 100%;
         }
 
+        /* 🔧 CONTAINER FRAME: Ukuran FIXED */
         .prank-photo-container {
             position: relative;
             width: 100%;
             max-width: 500px;
+            height: 350px; /* 🔥 Tinggi frame tetap */
             margin: 0 auto;
-        }
-
-        /* Label PRANK di ATAS foto (tidak nutupin) */
-        .prank-label {
-            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
-            color: #fff;
-            font-size: 32px;
-            font-weight: 900;
-            padding: 15px 30px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            animation: shake 0.5s infinite;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            margin-bottom: 15px;
-            display: inline-block;
-            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.4);
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: rotate(-3deg); }
-            25% { transform: rotate(3deg); }
-            50% { transform: rotate(-3deg); }
-            75% { transform: rotate(3deg); }
-        }
-
-        /* Foto dengan rasio dinamis */
-        .prank-photo {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            max-height: 60vh;
-            object-fit: contain;
+            background: #111; /* Background area kosong */
             border-radius: 15px;
             border: 3px solid #00ff88;
             box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-            background: #111;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding-top: 60px; /* Space untuk label PRANK */
+        }
+
+        /* Label PRANK di ATAS foto */
+        .prank-label {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            padding: 8px 20px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: shake 0.5s infinite;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.4);
+            white-space: nowrap;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%) rotate(-3deg); }
+            25% { transform: translateX(-50%) rotate(3deg); }
+            50% { transform: translateX(-50%) rotate(-3deg); }
+            75% { transform: translateX(-50%) rotate(3deg); }
+        }
+
+        /* 🔧 FOTO: Rasio asli, tidak terpotong */
+        .prank-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 🔥 Kunci: foto utuh, tidak crop */
+            display: block;
         }
 
         .prank-subtitle {
             margin-top: 20px;
             font-size: 14px;
             color: #666;
+            line-height: 1.5;
         }
 
         /* Footer */
@@ -233,9 +245,14 @@
 
         /* Responsive untuk HP kecil */
         @media (max-width: 360px) {
+            .prank-photo-container {
+                height: 300px; /* Frame lebih pendek di HP kecil */
+                padding-top: 55px;
+            }
+            
             .prank-label {
-                font-size: 24px;
-                padding: 12px 20px;
+                font-size: 18px;
+                padding: 6px 15px;
             }
             
             .wifi-info h1 {
@@ -293,9 +310,9 @@
         <!-- Prank Photo State -->
         <div class="prank-state" id="prankState">
             <div class="prank-photo-container">
-                <!-- Label di ATAS foto -->
+                <!-- Label di ATAS frame -->
                 <div class="prank-label">PRANK mas bro! 🙏🙈</div>
-                <!-- Foto dengan rasio dinamis -->
+                <!-- Foto: utuh, tidak terpotong -->
                 <img class="prank-photo" id="prankPhoto" src="" alt="Prank">
             </div>
             <p class="prank-subtitle">minal aidzin wal faizin mas bro 🙏🙏 <br> mohon maaf lahir dan batin mas bro 🙏</p>
@@ -328,8 +345,7 @@
             "https://i.pinimg.com/1200x/80/27/8e/80278e717f193c35b1b1684875747cce.jpg",
             "https://i.pinimg.com/736x/48/b2/1f/48b21f1ec6943039751e8bc4b373ae5d.jpg",
             "https://i.pinimg.com/736x/37/99/5c/37995c585e2b5b61d6d0ccb12a730e92.jpg",
-            "https://i.pinimg.com/736x/46/77/ed/4677ed08824a472923b0b4f3caad5409.jpg",
-            
+            "https://i.pinimg.com/736x/46/77/ed/4677ed08824a472923b0b4f3caad5409.jpg"
         ];
 
         let photoIndex = 0;
@@ -405,7 +421,7 @@
             }
             
             showNextPhoto();
-            setInterval(showNextPhoto, 1600); // Ganti foto setiap 2 detik
+            setInterval(showNextPhoto, 1600); // Ganti foto setiap 1.6 detik
         }
     </script>
 </body>
